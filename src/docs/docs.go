@@ -15,6 +15,263 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/cities/": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Create a City",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Create a City",
+                "parameters": [
+                    {
+                        "description": "Create a City",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CreateUpdateCityRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "City response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/cities/get-by-filter": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get Cities",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get Cities",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.PaginationInputWithFilter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "City response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.PagedList-github_com_paghapour_golang-clean-web-api_api_dto_CityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/cities/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get a City",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Get a City",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "City response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Update a City",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Update a City",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update a City",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CreateUpdateCityRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "City response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Delete a City",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cities"
+                ],
+                "summary": "Delete a City",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/countries/": {
             "post": {
                 "security": [
@@ -37,7 +294,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateUpdateCountryRequest"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CreateUpdateCountryRequest"
                         }
                     }
                 ],
@@ -47,13 +304,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/helper.BaseHttpResponse"
+                                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "result": {
-                                            "$ref": "#/definitions/dto.CountryResponse"
+                                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CountryResponse"
                                         }
                                     }
                                 }
@@ -63,7 +320,61 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/countries/get-by-filter": {
+            "post": {
+                "security": [
+                    {
+                        "AuthBearer": []
+                    }
+                ],
+                "description": "Get Countries",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get Countries",
+                "parameters": [
+                    {
+                        "description": "Request",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.PaginationInputWithFilter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Country response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.PagedList-github_com_paghapour_golang-clean-web-api_api_dto_CountryResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -99,13 +410,13 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/helper.BaseHttpResponse"
+                                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "result": {
-                                            "$ref": "#/definitions/dto.CountryResponse"
+                                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CountryResponse"
                                         }
                                     }
                                 }
@@ -115,7 +426,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -148,23 +459,23 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateUpdateCountryRequest"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CreateUpdateCountryRequest"
                         }
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Country response",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/helper.BaseHttpResponse"
+                                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                                 },
                                 {
                                     "type": "object",
                                     "properties": {
                                         "result": {
-                                            "$ref": "#/definitions/dto.CountryResponse"
+                                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CountryResponse"
                                         }
                                     }
                                 }
@@ -174,7 +485,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -203,16 +514,16 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "response",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -235,13 +546,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -267,7 +578,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.personData"
+                            "$ref": "#/definitions/api_handlers.personData"
                         }
                     }
                 ],
@@ -275,13 +586,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -313,13 +624,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -345,7 +656,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.RegisterLoginByMobileRequest"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.RegisterLoginByMobileRequest"
                         }
                     }
                 ],
@@ -353,19 +664,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "409": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -391,7 +702,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginByUsernameRequest"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.LoginByUsernameRequest"
                         }
                     }
                 ],
@@ -399,19 +710,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "409": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -437,7 +748,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.RegisterUserByUsernameRequest"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.RegisterUserByUsernameRequest"
                         }
                     }
                 ],
@@ -445,19 +756,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "409": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -483,7 +794,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.GetOtpRequest"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.GetOtpRequest"
                         }
                     }
                 ],
@@ -491,19 +802,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     },
                     "409": {
                         "description": "Failed",
                         "schema": {
-                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                            "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse"
                         }
                     }
                 }
@@ -511,9 +822,37 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.CountryResponse": {
+        "api_handlers.personData": {
+            "type": "object",
+            "required": [
+                "first_name",
+                "last_name",
+                "mobile_number"
+            ],
+            "properties": {
+                "first_name": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "minLength": 4
+                },
+                "last_name": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 6
+                },
+                "mobile_number": {
+                    "type": "string",
+                    "maxLength": 11,
+                    "minLength": 11
+                }
+            }
+        },
+        "github_com_paghapour_golang-clean-web-api_api_dto.CityResponse": {
             "type": "object",
             "properties": {
+                "country": {
+                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CountryResponse"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -522,7 +861,41 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CreateUpdateCountryRequest": {
+        "github_com_paghapour_golang-clean-web-api_api_dto.CountryResponse": {
+            "type": "object",
+            "properties": {
+                "cities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CityResponse"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paghapour_golang-clean-web-api_api_dto.CreateUpdateCityRequest": {
+            "type": "object",
+            "required": [
+                "countryId",
+                "name"
+            ],
+            "properties": {
+                "countryId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 3
+                }
+            }
+        },
+        "github_com_paghapour_golang-clean-web-api_api_dto.CreateUpdateCountryRequest": {
             "type": "object",
             "required": [
                 "name"
@@ -535,7 +908,26 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.GetOtpRequest": {
+        "github_com_paghapour_golang-clean-web-api_api_dto.Filter": {
+            "type": "object",
+            "properties": {
+                "filterType": {
+                    "description": "text number",
+                    "type": "string"
+                },
+                "from": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "type": {
+                    "description": "contains notContains equals notEqual startsWith lessThan lessThanOrEqual greaterThan greaterThanOrEqual inRange endsWith",
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_paghapour_golang-clean-web-api_api_dto.GetOtpRequest": {
             "type": "object",
             "required": [
                 "mobileNumber"
@@ -548,7 +940,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.LoginByUsernameRequest": {
+        "github_com_paghapour_golang-clean-web-api_api_dto.LoginByUsernameRequest": {
             "type": "object",
             "required": [
                 "password",
@@ -565,7 +957,82 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.RegisterLoginByMobileRequest": {
+        "github_com_paghapour_golang-clean-web-api_api_dto.PagedList-github_com_paghapour_golang-clean-web-api_api_dto_CityResponse": {
+            "type": "object",
+            "properties": {
+                "hasNextPage": {
+                    "type": "boolean"
+                },
+                "hasPreviousPage": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CityResponse"
+                    }
+                },
+                "pageNumber": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                },
+                "totalRows": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_paghapour_golang-clean-web-api_api_dto.PagedList-github_com_paghapour_golang-clean-web-api_api_dto_CountryResponse": {
+            "type": "object",
+            "properties": {
+                "hasNextPage": {
+                    "type": "boolean"
+                },
+                "hasPreviousPage": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.CountryResponse"
+                    }
+                },
+                "pageNumber": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                },
+                "totalRows": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_paghapour_golang-clean-web-api_api_dto.PaginationInputWithFilter": {
+            "type": "object",
+            "properties": {
+                "filter": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.Filter"
+                    }
+                },
+                "pageNumber": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "sort": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_dto.Sort"
+                    }
+                }
+            }
+        },
+        "github_com_paghapour_golang-clean-web-api_api_dto.RegisterLoginByMobileRequest": {
             "type": "object",
             "required": [
                 "mobileNumber",
@@ -584,7 +1051,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.RegisterUserByUsernameRequest": {
+        "github_com_paghapour_golang-clean-web-api_api_dto.RegisterUserByUsernameRequest": {
             "type": "object",
             "required": [
                 "firstName",
@@ -615,38 +1082,24 @@ const docTemplate = `{
                 }
             }
         },
-        "handlers.personData": {
+        "github_com_paghapour_golang-clean-web-api_api_dto.Sort": {
             "type": "object",
-            "required": [
-                "first_name",
-                "last_name",
-                "mobile_number"
-            ],
             "properties": {
-                "first_name": {
-                    "type": "string",
-                    "maxLength": 10,
-                    "minLength": 4
+                "colId": {
+                    "type": "string"
                 },
-                "last_name": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 6
-                },
-                "mobile_number": {
-                    "type": "string",
-                    "maxLength": 11,
-                    "minLength": 11
+                "sort": {
+                    "type": "string"
                 }
             }
         },
-        "helper.BaseHttpResponse": {
+        "github_com_paghapour_golang-clean-web-api_api_helper.BaseHttpResponse": {
             "type": "object",
             "properties": {
                 "error": {},
                 "result": {},
                 "resultCode": {
-                    "$ref": "#/definitions/helper.ResultCode"
+                    "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_helper.ResultCode"
                 },
                 "success": {
                     "type": "boolean"
@@ -654,12 +1107,12 @@ const docTemplate = `{
                 "validationErrors": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/validation.ValidationError"
+                        "$ref": "#/definitions/github_com_paghapour_golang-clean-web-api_api_validations.ValidationError"
                     }
                 }
             }
         },
-        "helper.ResultCode": {
+        "github_com_paghapour_golang-clean-web-api_api_helper.ResultCode": {
             "type": "integer",
             "enum": [
                 0,
@@ -684,7 +1137,7 @@ const docTemplate = `{
                 "InternalError"
             ]
         },
-        "validation.ValidationError": {
+        "github_com_paghapour_golang-clean-web-api_api_validations.ValidationError": {
             "type": "object",
             "properties": {
                 "message": {

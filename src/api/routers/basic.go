@@ -6,6 +6,8 @@ import (
 	"github.com/paghapour/golang-clean-web-api/config"
 )
 
+const GetByFilterExp string = "/get-by-filter"
+
 func Country(r *gin.RouterGroup, cfg *config.Config) {
 	h := handlers.NewCountryHandler(cfg)
 
@@ -13,5 +15,15 @@ func Country(r *gin.RouterGroup, cfg *config.Config) {
 	r.PUT("/:id", h.Update)
 	r.DELETE("/:id", h.Delete)
 	r.GET("/:id", h.GetById)
-	r.POST("/get-by-filter", h.GetByFilter)
+	r.POST(GetByFilterExp, h.GetByFilter)
+}
+
+func City(r *gin.RouterGroup, cfg *config.Config) {
+	h := handlers.NewCityHandler(cfg)
+
+	r.POST("/", h.Create)
+	r.PUT("/:id", h.Update)
+	r.DELETE("/:id", h.Delete)
+	r.GET("/:id", h.GetById)
+	r.POST(GetByFilterExp, h.GetByFilter)
 }

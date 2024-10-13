@@ -40,6 +40,7 @@ func NewBaseService[T any, Tc any, Tu any, Tr any](cfg *config.Config) *BaseServ
 
 // Create
 func (s *BaseService[T, Tc, Tu, Tr]) Create(ctx context.Context, req *Tc) (*Tr, error) {
+
 	model, _ := common.TypeConverter[T](req)
 	tx := s.Database.WithContext(ctx).Begin()
 	err := tx.
@@ -51,8 +52,8 @@ func (s *BaseService[T, Tc, Tu, Tr]) Create(ctx context.Context, req *Tc) (*Tr, 
 		return nil, err
 	}
 	tx.Commit()
-	bm , _ := common.TypeConverter[models.BaseModel](model)
-	return s.GetById(ctx, bm.Id) 
+	bm, _ := common.TypeConverter[models.BaseModel](model)
+	return s.GetById(ctx, bm.Id)
 }
 
 // Update
@@ -60,16 +61,15 @@ func (s *BaseService[T, Tc, Tu, Tr]) Update(ctx context.Context, id int, req *Tu
 
 	updateMap, _ := common.TypeConverter[map[string]interface{}](req)
 	snakeMap := map[string]interface{}{}
-	for k,v := range *updateMap{
+	for k, v := range *updateMap {
 		snakeMap[common.ToSnakeCase(k)] = v
 	}
 	snakeMap["modified_by"] = &sql.NullInt64{Int64: int64(ctx.Value(constants.UserIdKey).(float64)), Valid: true}
 	snakeMap["modified_at"] = sql.NullTime{Valid: true, Time: time.Now().UTC()}
-
 	model := new(T)
 	tx := s.Database.WithContext(ctx).Begin()
 	if err := tx.Model(model).
-		Where("id = ? and deleted by is null", id).
+		Where("id = ? and deleted_by is null", id).
 		Updates(snakeMap).
 		Error; err != nil {
 		tx.Rollback()
@@ -78,6 +78,7 @@ func (s *BaseService[T, Tc, Tu, Tr]) Update(ctx context.Context, id int, req *Tu
 	}
 	tx.Commit()
 	return s.GetById(ctx, id)
+
 }
 
 // Delete
@@ -96,11 +97,11 @@ func (s *BaseService[T, Tc, Tu, Tr]) Delete(ctx context.Context, id int) error {
 	}
 	if cnt := tx.
 		Model(model).
-		Where("id = ? and deleted by is null", id).
+		Where("id = ? and deleted_by is null", id).
 		Updates(deleteMap).
 		RowsAffected; cnt == 0 {
-		s.Logger.Error(logging.Postgres, logging.Update, service_errors.RecordNotFound, nil)
 		tx.Rollback()
+		s.Logger.Error(logging.Postgres, logging.Update, service_errors.RecordNotFound, nil)
 		return &service_errors.ServiceError{EndUserMessage: service_errors.RecordNotFound}
 	}
 	tx.Commit()
@@ -111,9 +112,9 @@ func (s *BaseService[T, Tc, Tu, Tr]) Delete(ctx context.Context, id int) error {
 // Get By Id
 func (s *BaseService[T, Tc, Tu, Tr]) GetById(ctx context.Context, id int) (*Tr, error) {
 	model := new(T)
-
-	err := s.Database.
-		Where("id = ? and deleted by id is null", id).
+	db := Preload(s.Database, s.Preloads)
+	err := db.
+		Where("id = ? and deleted_by is null", id).
 		First(model).
 		Error
 	if err != nil {
@@ -124,16 +125,20 @@ func (s *BaseService[T, Tc, Tu, Tr]) GetById(ctx context.Context, id int) (*Tr, 
 
 
 // Get By Filter
-func (s *BaseService[T, Tc, Tu, Tr]) GetByFilter(ctx context.Context, req *dto.PaginationInputWithFilter) (*dto.PagedList[Tr], error){
-	return Paginate[T, Tr](req, s.Preloads, s.Database)
+func (s *BaseService[T, Tc, Tu, Tr]) GetByFilter(ctx context.Context, req *dto.PaginationInputWithFilter) (*dto.PagedList[Tr], error) {
+	res, err := Paginate[T, Tr](req, s.Preloads, s.Database)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 
-func NewPagedList[T any](items *[]T, count int64, pageNumber int, pageSize int64) *dto.PagedList[T]{
+func NewPagedList[T any](items *[]T, count int64, pageNumber int, pageSize int64) *dto.PagedList[T] {
 	pl := &dto.PagedList[T]{
 		PageNumber: pageNumber,
-		TotalRows: count,
-		Items: items,
+		TotalRows:  count,
+		Items:      items,
 	}
 	pl.TotalPages = int(math.Ceil(float64(count) / float64(pageSize)))
 	pl.HasNextPage = pl.PageNumber < pl.TotalPages
@@ -159,21 +164,20 @@ func Paginate[T any, Tr any](pagination *dto.PaginationInputWithFilter, preloads
 
 	err := db.
 		Where(query).
-		Offset(pagination.GetOffSet()).
+		Offset(pagination.GetOffset()).
 		Limit(pagination.GetPageSize()).
 		Order(sort).
 		Find(&items).
 		Error
 
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	rItems, err = common.TypeConverter[[]Tr](items)
-
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
-	return NewPagedList(rItems, totalRows, pagination.PageNumber, int64(pagination.PageSize)) , err
+	return NewPagedList(rItems, totalRows, pagination.PageNumber, int64(pagination.PageSize)), err
 
 }
 
@@ -197,7 +201,7 @@ func getQuery[T any](filter *dto.DynamicFilter) string {
 					query = append(query, fmt.Sprintf("%s ILike '%s%%'", fld.Name, filter.From))
 				case "endsWith":
 					query = append(query, fmt.Sprintf("%s ILike '%%%s'", fld.Name, filter.From))
-				case "equal":
+				case "equals":
 					query = append(query, fmt.Sprintf("%s = '%s'", fld.Name, filter.From))
 				case "notEqual":
 					query = append(query, fmt.Sprintf("%s != '%s'", fld.Name, filter.From))
@@ -230,7 +234,7 @@ func getSort[T any](filter *dto.DynamicFilter) string {
 	typeT := reflect.TypeOf(*t)
 	sort := make([]string, 0)
 	if filter.Sort != nil {
-		for _, tp := range filter.Sort {
+		for _, tp := range *filter.Sort {
 			fld, ok := typeT.FieldByName(tp.ColId)
 			if ok && (tp.Sort == "asc" || tp.Sort == "desc") {
 				fld.Name = common.ToSnakeCase(fld.Name)

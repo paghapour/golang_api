@@ -11,12 +11,12 @@ import (
 )
 
 type CityService struct {
-	base *BaseService[models.City, dto.CreateUpdateCityRequest, dto.CreateUpdateCityRequest, dto.CityResponse]
+	base *BaseService[models.City, dto.CreateCityRequest, dto.UpdateCityRequest, dto.CityResponse]
 }
 
 func NewCityService(cfg *config.Config) *CityService {
 	return &CityService{
-		base: &BaseService[models.City, dto.CreateUpdateCityRequest, dto.CreateUpdateCityRequest, dto.CityResponse]{
+		base: &BaseService[models.City, dto.CreateCityRequest, dto.UpdateCityRequest, dto.CityResponse]{
 			Database: db.GetDb(),
 			Logger:   logging.NewLogger(cfg),
 			Preloads: []preload{
@@ -27,12 +27,12 @@ func NewCityService(cfg *config.Config) *CityService {
 }
 
 // Create
-func (s *CityService) Create(ctx context.Context, req *dto.CreateUpdateCityRequest) (*dto.CityResponse, error) {
+func (s *CityService) Create(ctx context.Context, req *dto.CreateCityRequest) (*dto.CityResponse, error) {
 	return s.base.Create(ctx, req)
 }
 
 // Update
-func (s *CityService) Update(ctx context.Context, id int, req *dto.CreateUpdateCityRequest) (*dto.CityResponse, error) {
+func (s *CityService) Update(ctx context.Context, id int, req *dto.UpdateCityRequest) (*dto.CityResponse, error) {
 	return s.base.Update(ctx, id, req)
 }
 
